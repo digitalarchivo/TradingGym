@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Trading Gym (&gt;Python 3.7) | TradingGym</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Trading Gym (&gt;Python 3.7)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Trading Gym is an open source project for the development of reinforcement learning algorithms in the context of trading." />
+<meta property="og:description" content="Trading Gym is an open source project for the development of reinforcement learning algorithms in the context of trading." />
+<link rel="canonical" href="https://digitalarchivo.github.io/TradingGym/" />
+<meta property="og:url" content="https://digitalarchivo.github.io/TradingGym/" />
+<meta property="og:site_name" content="TradingGym" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Trading Gym (&gt;Python 3.7)" />
+<script type="application/ld+json">
+{"headline":"Trading Gym (&gt;Python 3.7)","description":"Trading Gym is an open source project for the development of reinforcement learning algorithms in the context of trading.","url":"https://cove9988.github.io/TradingGym/","@type":"WebSite","name":"TradingGym","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/TradingGym/assets/css/style.css?v=30f62d21e61dc683e6a48b9774a2e272fb91f0d9">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/TradingGym/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="https://digitalarchivo.github.io/TradingGym/">TradingGym</a></h1>
+
+        
+
+        <p>Trading Gym is an open source project for the development of reinforcement learning algorithms in the context of trading.</p>
+
+        
+        <p class="view"><a href="https://github.com/cove9988/TradingGym">View the Project on GitHub <small>cove9988/TradingGym</small></a></p>
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <h1 id="trading-gym-python-37">Trading Gym (&gt;Python 3.7)</h1>
+<p>Trading Gym is an open-source project for the development of deep reinforcement learning algorithms in the context of forex trading.</p>
+<h2 id="highlight-of-the-project">Highlight of the project</h2>
+<ol>
+  <li>customized gym.env for forex trading, with three actions (buy,sell, nothing). rewards is forex point based and realized by stop loss (SL) and profit taken (PT). The SL is fixed by passing parameter and PT is AI learning to maximize the rewards.</li>
+  <li>multiply pairs with same time frame, time frame can setup from 1M, 5M, 30M, 1H, 4H. Both over night cash penalty, transaction fee, transaction overnight penalty (SWAP) can be configured.</li>
+  <li>data process will split the data into daily, weekly or monthly time serial based. and will training in parallel by using Isaac or Ray (coming soon)</li>
+  <li>file log, console print-out and live graph are available for render
+    <h2 id="major-feature">Major Feature</h2>
+  </li>
+  <li>
+    <p>forex feature</p>
+
+    <p>1.1.  using Point (5 decimal forex )  for reward and balance calculation
+ ### Basis point
+ The last decimal place to which a particular exchange rate is usually quoted is referred to as a point.</p>
+  </li>
+  <li>
+    <p>data process: (./data/data_process.py)</p>
+
+    <p>2.1. processing csv (time, open, high, low, close), the source I used is MetaTrader.</p>
+
+    <p>2.2. adding a few required features, such as symbol, day, etc…</p>
+
+    <p>2.3. adding TA features by using finta</p>
+
+    <p>2.4. splitting data based on time serial into weekly or monthly</p>
+
+    <p>2.5 combining different trading pair (e.g GBPUSD, EURUSD…) into on csv for vector process. (so far manually)</p>
+  </li>
+  <li>
+    <p>environment:</p>
+
+    <p>3.1. action_space = spaces.Box(low=0, high=3, shape=(len(assets), ))</p>
+
+    <p>3.2. _action = floor(action) {0:buy, 1:sell,2:nothing}</p>
+
+    <p>3.3. action_price is the current candlestick close price.</p>
+
+    <p>3.4. observation_space contains current balance, .. (draw down) * assets + (TA features)*assets</p>
+
+    <p>3.5. using fix stop_loss (SL) parameter and fraction calculation for profit_taken (PT) as a part of action</p>
+
+    <p>3.6. overnight cash penalty, transaction fee, transaction holding over night penalty</p>
+
+    <p>3.7. rewards will be realized once SL or PT trigger at next step</p>
+
+    <p>3.8. max holding</p>
+
+    <p>3.9. done when balance &lt;= x  or step == len(df)  [reach the weekend]
+     if step == len(df) close all holding position at close price.</p>
+  </li>
+</ol>
+
+<h2 id="the-trading-environment">The trading environment:</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Candle Trading</code> is a trading environment with input ohlc (open, high,low,close candlestick/bar) data, it is very useful to forex (currency) trading. We use profit-taking (machine learning) and fixed stop-loss.</p>
+
+<h2 id="create-your-own-data_process">Create your own <code class="language-plaintext highlighter-rouge">data_process</code></h2>
+
+<p>To create your own data, you can use <code class="language-plaintext highlighter-rouge">data_process</code> base class which can be found in the file ‘data/data_process.py’.</p>
+
+<h2 id="compatibility-with-openai-gym">Compatibility with OpenAI gym</h2>
+
+<p>The tgym (trading environment) is inherited from OpenAI Gym. We aim to entirely base it upon OpenAI Gym architecture and propose Trading Gym as an additional OpenAI environment.</p>
+
+<h2 id="examples">Examples</h2>
+<p>ppo_test.ipynb</p>
+
+
+      </section>
+      <footer>
+        
+        <p>This project is maintained by <a href="https://github.com/digitalarchivo">digitalarchivo</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/TradingGym/assets/js/scale.fix.js"></script>
+  </body>
+</html>
